@@ -58,6 +58,6 @@
 	void del_parabole(sweep_line *);
 	
 	//python.c
-	
+	void generate_python_voronoi(face *, double, double, double, double);
 
 #endif

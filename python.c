@@ -2,7 +2,7 @@
 #include "voronoi.h"
 #include "python_code.h"
 
-void generate_python(face *v, double xmin, double ymin, double xmax, double ymax) {
+void generate_python_voronoi(face *v, double xmin, double ymin, double xmax, double ymax) {
 	int i, j;
 	
 	freopen("/tmp/plot.py", "wt", stdout);

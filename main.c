@@ -9,7 +9,6 @@ int main() {
 	int i,j,s=0;
 	h_element *t, g;
 	sweep_line *e;
-	
 	double xmin, xmax, ymin, ymax;
 	
 	freopen("tests/stress", "rt", stdin);
@@ -65,7 +64,7 @@ int main() {
 		}
 	}
 	
-	generate_python(voronoi, xmin, ymin, xmax, ymax);
+	generate_python_voronoi(voronoi, xmin, ymin, xmax, ymax);
 
 	return 0;
 }
