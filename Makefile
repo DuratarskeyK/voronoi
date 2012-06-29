@@ -1,24 +1,12 @@
-all: voronoi
+SOURCES=main.o heap.o geometry.o dclist.o python.o
+CFLAGS=-Wall
 
-voronoi: main.o heap.o geometry.o dclist.o python.o
-	gcc heap.o geometry.o dclist.o python.o main.o -o voronoi -lm
+all: $(SOURCES) link
 
-main.o: main.c
-	gcc -c main.c
+link:
+	gcc -lm -o voronoi $(SOURCES)
 
-heap.o: heap.c
-	gcc -c heap.c
-	
-geometry.o: geometry.c
-	gcc -c geometry.c
-	
-dclist.o: dclist.c
-	gcc -c dclist.c
-
-python.o: python.c
-	gcc -c python.c
-
-run: clean voronoi
+run: clean all
 	./voronoi
 
 clean:

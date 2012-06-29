@@ -63,8 +63,6 @@ int geom_intersection(sweep_line *p, point *site, point *r) {
 void circle_event(sweep_line *arc) {
 	h_element *c_event;
 	point a;
-	int i;
-	sweep_line *e;
 	double yc = 0;	
 
 	if(!arc)
@@ -95,14 +93,18 @@ void circle_event(sweep_line *arc) {
 
 int circle(point a, point b, point c, double *y, point *o)
 {	
+	double A,B,C,D,E,F,G;
+	
 	if ((b.x-a.x)*(c.y-a.y) - (c.x-a.x)*(b.y-a.y) > 0)
 		return 0;
 
-	double A = b.x - a.x,  B = b.y - a.y,
-		C = c.x - a.x,  D = c.y - a.y,
-		E = A*(a.x+b.x) + B*(a.y+b.y),
-		F = C*(a.x+c.x) + D*(a.y+c.y),
-		G = 2*(A*(c.y-b.y) - B*(c.x-b.x));
+	A = b.x - a.x;  
+	B = b.y - a.y;
+	C = c.x - a.x;
+	D = c.y - a.y;
+	E = A*(a.x+b.x) + B*(a.y+b.y);
+	F = C*(a.x+c.x) + D*(a.y+c.y);
+	G = 2*(A*(c.y-b.y) - B*(c.x-b.x));
 
 	if (G == 0) return 0;
 

@@ -15,9 +15,11 @@ void add_parabole(point *def) {
 		parabole = malloc(sizeof(sweep_line));
 		parabole->site = *def;
 		parabole->prev = parabole->next = NULL;
-		voronoi[p].site = *def;
-		voronoi[p].last_edge = &voronoi[p].edges[0];
-		parabole->f = &voronoi[p];
+		xmin = xmax = def->x;
+		ymin = ymax = def->y;
+		voronoi[0].site = *def;
+		voronoi[0].is_ear = 0;
+		parabole->f = &voronoi[0];
 		p++;
 	}
 	else {
@@ -25,6 +27,11 @@ void add_parabole(point *def) {
 			if(geom_intersection(i, def, &bp))
 				break;
 		}
+		
+		if(xmin > def->x) xmin = def->x;
+		if(xmax < def->x) xmax = def->x;
+		if(ymin > def->y) ymin = def->y;
+		if(ymax < def->y) ymax = def->y;
 		
 		if(!i) {
 			for(i = parabole; i->next; i = i->next);
@@ -50,15 +57,15 @@ void add_parabole(point *def) {
 			new2->prev = new;
 			
 			voronoi[p].site = *def;
-			voronoi[p].last_edge = &voronoi[p].edges[0];
+			voronoi[p].is_ear = 0;
 			new->f = &voronoi[p];
 			p++;
 			
 			e1 = malloc(sizeof(half_edge));
 			e2 = malloc(sizeof(half_edge));
+			e1->prev = e2 -> prev = e1->next = e2->next = NULL;
 			e1->twin = e2;
 			e2->twin = e1;
-			e1->f = e2->f = 1;
 			
 			e1->iface = i->f;
 			e2->iface = new->f;
@@ -68,11 +75,9 @@ void add_parabole(point *def) {
 			new->prev->e2 = e1;
 			new->next->e1 = e2;
 			
-			*(i->f->last_edge++) = e1;
-			*(new->f->last_edge++) = e2;
-			
-			*(i->f->last_edge) = *(new->f->last_edge) = NULL;
-			
+			new->f->edge = e2;
+			i->f->edge = e1;
+
 			circle_event(new->prev);
 			circle_event(new->next);
 		}
@@ -81,7 +86,7 @@ void add_parabole(point *def) {
 
 void del_parabole(sweep_line *arc) {
 	half_edge *e1, *e2;
-	sweep_line *a,*e;
+	sweep_line *a;
 	
 	e1 = malloc(sizeof(half_edge));
 	e2 = malloc(sizeof(half_edge));
@@ -89,18 +94,21 @@ void del_parabole(sweep_line *arc) {
 	a = arc;
 
 	e1->origin = a->e1->twin->origin = a->e2->twin->origin = arc->circle->pnt;
-	e1->f = e2->f = 1;
-	
+	e1->f = a->e2->twin->f = a->e1->twin->f = 1;
 	a->prev->next = a->next;
 	a->next->prev = a->prev;
+
+	e2->next = a->e2->twin;
+	a->e2->twin->prev = e2;
+	a->e1->next = e1;
+	e1->prev = a->e1;
+	a->e2->next = a->e1->twin;
+	a->e1->twin->prev = a->e2;
 	
 	e1->iface = a->prev->f;
 	e2->iface = a->next->f;
 	e1->twin = e2;
 	e2->twin = e1;
-	*(a->prev->f->last_edge++) = e1;
-	*(a->next->f->last_edge++) = e2;
-	*a->next->f->last_edge = *a->prev->f->last_edge = NULL;
 	
 	a->prev->e2 = a->next->e1 = e1;
 

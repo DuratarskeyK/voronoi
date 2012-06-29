@@ -6,12 +6,12 @@
 int np;
 
 int main() {
-	int i,j,s=0;
+	int i;
 	h_element *t, g;
 	sweep_line *e;
-	double xmin, xmax, ymin, ymax;
+	half_edge *first;
 	
-	freopen("tests/stress", "rt", stdin);
+	freopen("tests/works1", "rt", stdin);
 	
 	scanf("%d", &np);
 
@@ -23,20 +23,6 @@ int main() {
 		t->type = 0;
 		t->y = t->pnt.y;
 		heap_insert(t);
-		
-		if(!s) {
-			xmin = t->pnt.x;
-			ymin = t->pnt.y;
-			xmax = t->pnt.x;
-			ymax = t->pnt.y;
-			s = 1;
-		}
-		else {
-			if(xmin > t->pnt.x) xmin = t->pnt.x;
-			if(ymin > t->pnt.y) ymin = t->pnt.y;
-			if(xmax < t->pnt.x) xmax = t->pnt.x;
-			if(ymax < t->pnt.y) ymax = t->pnt.y;
-		}
 	}
 
 	while((g = heap_extractmax()).type != 2) {
@@ -58,13 +44,28 @@ int main() {
 	
 	sweep_coord -= fabs(ymin*10);
 
+	first = NULL;
+
 	for(e = parabole; e; e = e->next) {
 		if(e->e2) {
+			e->f->is_ear = 1;
+			e->e2->twin->f = 1;
 			e->e2->twin->origin = geom_breakpoint(&e->site, &e->next->site);
+			if(!first) {
+				first = e->e2->twin;
+			}
+			else {
+				e->e2->next = first;
+				first->prev = e->e2->next;
+				first = e->e2->twin;
+			}
 		}
 	}
 	
-	generate_python_voronoi(voronoi, xmin, ymin, xmax, ymax);
+	parabole->e2->next = first;
+	first->prev = parabole->e2;
+	
+	generate_python_chull(voronoi, xmin, ymin, xmax, ymax);
 
 	return 0;
 }

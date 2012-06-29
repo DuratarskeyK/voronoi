@@ -59,7 +59,6 @@ void heap_up(int i) {
 }
 
 void heap_insert(h_element *elem) {
-	double y;
 	if(heap_elem == heap_size) {
 		site_heap = realloc(site_heap, (heap_size+10)*sizeof(h_element));
 		heap_size+=10;

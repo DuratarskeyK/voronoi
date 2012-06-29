@@ -14,14 +14,14 @@
 	typedef struct vedge {
 		point origin;
 		struct vface *iface;
-		struct vedge *twin;
+		struct vedge *twin, *next, *prev;
 		int f;
 	} half_edge;
 
 	typedef struct vface {
 		point site;
-		struct vedge **last_edge;
-		struct vedge *edges[20];
+		struct vedge *edge;
+		unsigned int is_ear:1;
 	} face;
 
 	typedef struct dc_list {
@@ -36,7 +36,7 @@
 	extern face *voronoi;
 	extern sweep_line *parabole;
 	extern h_element **site_heap;
-	double sweep_coord;
+	double sweep_coord, xmin, xmax, ymin, ymax;
 
 	//heap.c
 	#define PARENT(i) ((i-1)/2)
@@ -59,5 +59,6 @@
 	
 	//python.c
 	void generate_python_voronoi(face *, double, double, double, double);
+	void generate_python_chull(face *, double, double, double, double);
 
 #endif

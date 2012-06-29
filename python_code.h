@@ -6,6 +6,6 @@
 	
 	#define SITES_START "sites = [\n"
 	
-	#define MAIN_CODE "codes = []\nfor i in range(len(verts)/2):\n\tcodes.extend([Path.MOVETO,Path.LINETO])\npath = Path(verts, codes)\n\nfig = plt.figure()\nax = fig.add_subplot(111)\npatch = patches.PathPatch(path, facecolor='orange', lw=0.5)\nax.add_patch(patch)\nfor i in sites:\n\tpatch = patches.Circle(i, radius=0.08)\n\tax.add_patch(patch)\n"
+	#define MAIN_CODE "codes = []\nfor i in range(len(verts)/2):\n\tcodes.extend([Path.MOVETO,Path.LINETO])\npath = Path(verts, codes)\n\nfig = plt.figure()\nax = fig.add_subplot(111)\npatch = patches.PathPatch(path, facecolor='orange', lw=0.5)\nax.add_patch(patch)\nfor i in sites:\n\tpatch = patches.Circle(i, radius=0.5)\n\tax.add_patch(patch)\n"
 	
 #endif
